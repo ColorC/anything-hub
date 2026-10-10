@@ -1,0 +1,21 @@
+[
+  {
+    "id": "2048",
+    "title": "2048",
+    "description": "滑动方块，合并相同数字。方向键或手指滑动都能玩。",
+    "genre": "益智",
+    "repo": "https://github.com/gabrielecirulli/2048.git",
+    "license": "MIT",
+    "mode": "static"
+  },
+  {
+    "id": "hello",
+    "title": "Hello 猜单词",
+    "description": "用字母线索猜出英文单词，支持调整单词长度。",
+    "genre": "文字",
+    "repo": "https://github.com/lynn/hello.git",
+    "license": "MIT",
+    "mode": "build",
+    "output": "build"
+  }
+]

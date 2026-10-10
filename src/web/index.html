@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="color-scheme" content="light" />
+  <meta name="theme-color" content="#fafafa" />
+  <title>浏览作品 · 创意工坊</title>
+  <link rel="stylesheet" href="./styles.css" />
+  <script type="module" src="./dist/app.js"></script>
+</head>
+<body>
+  <header class="masthead">
+    <a class="brand" href="?view=browse" data-route="browse"><span class="brand-mark" aria-hidden="true">▦</span>创意工坊</a>
+    <nav class="nav-links" aria-label="主导航">
+      <a class="nav-link" href="?view=browse" data-route="browse">浏览作品</a>
+      <a class="nav-link" href="?view=library" data-route="library">我的游戏</a>
+      <a class="nav-link" href="?view=downloads" data-route="downloads">下载任务</a>
+      <a class="nav-link" href="?view=reports" data-route="reports">问题记录</a>
+    </nav>
+    <form class="header-search" id="search-form" role="search">
+      <label class="sr-only" for="game-search">搜索作品或作者</label>
+      <input id="game-search" type="search" placeholder="搜索作品或作者" autocomplete="off" />
+      <button type="submit" aria-label="搜索">⌕</button>
+    </form>
+    <button class="button primary compact" id="add-repository" type="button">添加仓库</button>
+    <details class="entry-menu" id="runtime-info">
+      <summary><span class="connection-dot" id="connection-dot"></span><span id="runtime-label">运行主机待确认</span></summary>
+      <div class="entry-popover">
+        <p id="connection-label">正在连接</p>
+        <p id="machine-note">运行主机尚未确认；连接后会显示源码下载、构建和报告保存所在的主机。</p>
+        <p id="preview-note"><a href="./downloads/creative-workshop-windows-x64.zip">下载 Windows 版</a>，在你选择的电脑上启动后，请核对这里显示的运行主机。</p>
+        <button class="copy-button" id="copy-runtime-link" type="button">复制链接</button>
+      </div>
+    </details>
+  </header>
+  <main id="main-content">
+    <section class="catalog-page page-shell" id="catalog-view" hidden>
+      <aside class="filter-sidebar" id="filter-sidebar" aria-label="作品筛选">
+        <div class="filter-heading"><strong>筛选作品</strong><button class="text-button" id="clear-filters" type="button">清除</button></div>
+        <div id="genre-filters" class="filter-group"></div>
+        <div id="license-filters" class="filter-group"></div>
+        <div id="source-filters" class="filter-group"></div>
+      </aside>
+      <div class="catalog-content">
+        <div class="page-heading">
+          <h1 id="library-title">浏览作品</h1>
+          <button class="text-button mobile-filters" id="toggle-filters" type="button" aria-expanded="false" aria-controls="filter-sidebar">筛选作品</button>
+          <button class="copy-button" id="copy-catalog-link" type="button" aria-label="复制当前目录链接" title="复制当前目录链接">复制链接</button>
+        </div>
+        <div class="catalog-toolbar"><p id="catalog-context">网页游戏</p><label>排序 <select id="game-sort" aria-label="作品排序"><option value="catalog">目录顺序</option><option value="title">名称</option><option value="installed">最近安装</option></select></label></div>
+        <div id="game-grid" class="game-grid" aria-live="polite"><p class="empty-state">正在读取作品…</p></div>
+      </div>
+    </section>
+    <section class="detail-page page-shell" id="detail-view" hidden aria-label="作品详情"><div id="detail-content"></div></section>
+    <section class="play-page" id="play-view" hidden aria-labelledby="play-title">
+      <div class="play-toolbar">
+        <a class="text-link" id="back-to-detail" href="?view=browse">← 返回详情</a><h1 id="play-title">游戏</h1>
+        <a class="button compact" id="fullscreen-link" target="_blank" rel="noopener" aria-disabled="true">全屏打开</a>
+        <button class="button compact" id="feedback-button" type="button" disabled>反馈问题</button>
+        <button class="copy-button" id="copy-current-link" type="button">复制链接</button>
+      </div>
+      <div class="game-stage" id="game-stage">
+        <div class="stage-placeholder" id="stage-placeholder"><h2 id="stage-title">选择作品</h2><p id="stage-description"></p><div><button class="button primary" id="stage-action" type="button" hidden>安装游戏</button><a class="text-link" href="?view=downloads" data-route="downloads">查看下载任务</a></div></div>
+        <iframe id="game-frame" title="游戏" allow="fullscreen; autoplay; gamepad" hidden></iframe>
+      </div>
+    </section>
+    <section class="list-page page-shell" id="downloads-view" hidden>
+      <div class="page-heading"><h1>下载任务</h1><button class="copy-button" data-copy-view="downloads" type="button">复制链接</button></div>
+      <div id="downloads-list" class="task-list" aria-live="polite"></div>
+    </section>
+    <section class="list-page page-shell" id="reports-view" hidden>
+      <div class="page-heading"><h1>问题记录</h1><button class="copy-button" data-copy-view="reports" type="button">复制链接</button></div>
+      <p class="list-note" id="reports-note">报告保存所在的主机待确认，可在连接后查看或导出给创作者。</p>
+      <div id="reports-list" class="reports-list" aria-live="polite"></div>
+    </section>
+  </main>
+  <div class="toast" id="toast" role="status" hidden></div>
+  <dialog class="import-dialog" id="import-dialog" aria-labelledby="import-title">
+    <form id="import-form">
+      <div class="dialog-heading"><h2 id="import-title">添加仓库</h2><button class="close-button" id="close-import" type="button" aria-label="关闭添加仓库">×</button></div>
+      <label for="repository-url">公开仓库地址</label><input id="repository-url" name="repo" type="url" placeholder="https://github.com/作者/作品" required autocomplete="off" />
+      <p class="field-note">下载和安装所在的主机待确认，连接后会显示主机名。</p>
+      <details class="import-advanced"><summary>可选设置</summary>
+        <label for="repository-title">作品名称</label><input id="repository-title" name="title" placeholder="留空时使用仓库名称" />
+        <label for="repository-ref">分支或版本</label><input id="repository-ref" name="ref" placeholder="留空时使用默认分支" />
+        <label for="repository-output">网页入口目录</label><input id="repository-output" name="output" placeholder="例如 dist 或 build，留空自动检测" />
+      </details>
+      <p class="form-error" id="import-error" role="alert" hidden></p>
+      <div class="dialog-actions"><button class="button" id="cancel-import" type="button">取消</button><button class="button primary" id="submit-import" type="submit">添加并安装</button></div>
+    </form>
+  </dialog>
+  <noscript>请启用 JavaScript，以浏览和运行游戏。</noscript>
+</body>
+</html>
